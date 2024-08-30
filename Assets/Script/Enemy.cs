@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float attackCD;
     private float attackTimer;
     [SerializeField] private float roarCD;
+    [SerializeField] private float moveSpeed;
     private float roarTimer;
     public float attackDelay;
     private float currentHP;
@@ -38,10 +39,12 @@ public class Enemy : MonoBehaviour
         if(Vector3.Distance(this.gameObject.transform.position, player.transform.position) > attackDistance)
         {
             this.transform.forward = player.transform.position - this.transform.position;
+            this.GetComponent<Rigidbody>().velocity = this.transform.forward * moveSpeed;
             animator.SetBool("IsRunning", true);
         }
         else
         {
+            this.GetComponent<Rigidbody>().velocity = Vector3.zero;
             animator.SetBool("IsRunning", false);
             Attack();
         }

@@ -6,7 +6,6 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI text;
     private int score;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private GameObject zombiePre;
@@ -34,11 +33,6 @@ public class GameManager : MonoBehaviour
             StartCoroutine(SpawnZombies(zombieCountPerWave));
             spawnTimer = 0;
         }
-    }
-    public void ChangeScore(int changeAmount)
-    {
-        score += changeAmount;
-        text.text = score.ToString();
     }
     #region spawnZombie
 
