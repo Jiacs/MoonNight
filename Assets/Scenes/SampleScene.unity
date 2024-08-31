@@ -1499,6 +1499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1065988859}
   - component: {fileID: 1065988860}
+  - component: {fileID: 1065988861}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GameManager
@@ -1541,6 +1542,26 @@ MonoBehaviour:
   maxZombieCount: 3
   zombieCountPerWave: 3
   zombieSpawnInterval_perWave: 10
+--- !u!114 &1065988861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065988858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16db712607dcf6d459e98eaa6a74860a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableBloom: 1
+  Intensity: 10
+  Threshold: 0.5
+  enableRadiaBlur: 1
+  Level: 10
+  BufferRadius: 0.5
+  CenterX: 0.5
+  CenterY: 0.5
 --- !u!1001 &1078963099
 PrefabInstance:
   m_ObjectHideFlags: 0
