@@ -4,18 +4,29 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    //[SerializeField] private GameObject canvas;
-    //public GameObject HitParticle;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private Ray ray;
+    private RaycastHit hit;
+    private GameObject obj;
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            Shot();
+        }
+    }
+    private void Shot()
+    {
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit))
+        {
+            Debug.Log(hit.collider.gameObject.name);
+            obj = hit.collider.gameObject;
+            if (obj.tag == "Enemy")
+            {
+                obj.GetComponent<Enemy>().GetHit(20);
+            }
+        }
     }
     public void GetHit()
     {
