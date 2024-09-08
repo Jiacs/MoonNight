@@ -6,29 +6,36 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    private int score;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private GameObject zombiePre;
     [SerializeField] private int maxZombieCount;
     [SerializeField] private int zombieCountPerWave;
-    [SerializeField] private float zombieSpawnInterval_perWave;
+    [SerializeField] private float zombieSpawnIntervalPerWave;
     private float spawnTimer;
     private int zombieCount_hasSpawned = 0;
     private float zombieSpawnInterval = 1;
+    private PostEffectsManager postEffectsManager;
 
-    // Start is called before the first frame update
-    void Start()
+    private static bool gameStart = false;
+    public static bool GameStarted => gameStart;
+
+    private Texture2D customCursorTexture;
+
+    private void Start()
     {
-        
+        postEffectsManager = GetComponent<PostEffectsManager>();
+        customCursorTexture = Resources.Load<Texture2D>("Art/Shot");
     }
-
-    // Update is called once per frame
     void Update()
     {
+        if (!gameStart)
+        {
+            return;
+        }
         if(zombieCount_hasSpawned >= maxZombieCount)
         { return; }
         spawnTimer += Time.deltaTime;
-        if(spawnTimer >= zombieSpawnInterval_perWave)
+        if(spawnTimer >= zombieSpawnIntervalPerWave)
         {
             StartCoroutine(SpawnZombies(zombieCountPerWave));
             spawnTimer = 0;
@@ -36,6 +43,12 @@ public class GameManager : MonoBehaviour
     }
     #region spawnZombie
 
+    public void StartGame()
+    {
+        postEffectsManager.InitializePostEffects();
+        gameStart = true;
+        Cursor.SetCursor(customCursorTexture, new Vector2(customCursorTexture.width/2, customCursorTexture.height/2), CursorMode.ForceSoftware);
+    }
     private void SpawnZombie()
     {
         int index = Random.Range(0, spawnPoints.Length);

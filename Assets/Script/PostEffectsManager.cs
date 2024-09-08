@@ -5,49 +5,80 @@ using UnityEngine;
 
 public class PostEffectsManager : MonoBehaviour
 {
-    [Header("Bloom")]
-    [SerializeField] private bool enableBloom;
+    [Header("Bloom - Initialize")]
+    [SerializeField] private bool bloom_Enable;
     [Range(0, 10)]
-    public float Intensity = 10;
+    public float bloom_Intensity = 10;
     [Range(0, 1)]
-    public float Threshold = 0.5f;
-    [Header("RadiaBlur")]
-    [SerializeField] private bool enableRadiaBlur;
+    public float bloom_Threshold = 0.5f;
+    private Bloom bloomScript;
+    [Header("RadiaBlur - Initialize")]
+    [SerializeField] private bool radiaBlur_Enable;
     [Range(1, 100)]
-    public float Level = 10;
+    public float radiaBlur_Level = 10;
     [Range(0, 1)]
-    public float BufferRadius = 0.5f;
+    public float radiaBlur_BufferRadius = 0.5f;
     [Range(0, 1)]
-    public float CenterX = 0.5f;
+    public float radiaBlur_CenterX = 0.5f;
     [Range(0, 1)]
-    public float CenterY = 0.5f;
+    public float radiaBlur_CenterY = 0.5f;
+    private RadiaBlur radialBlurScript;
 
+    #region Singleton
+    private static PostEffectsManager instance;
+    public static PostEffectsManager Instance => instance;
     private void Awake()
     {
-        if(enableBloom)
+        if (instance == null)
         {
-            Camera.main.AddComponent<Bloom>();
-            Camera.main.GetComponent<Bloom>().Intensity = Intensity;
-            Camera.main.GetComponent<Bloom>().Threshold = Threshold;
+            instance = this;
         }
-        if(enableRadiaBlur)
+        else
         {
-            Camera.main.AddComponent<RadiaBlur>();
-            Camera.main.GetComponent<RadiaBlur>().Level = Level;
-            Camera.main.GetComponent<RadiaBlur>().BufferRadius = BufferRadius;
-            Camera.main.GetComponent<RadiaBlur>().CenterX = CenterX;
-            Camera.main.GetComponent<RadiaBlur>().CenterY = CenterY;
+            Debug.Log(this.gameObject.name);
+            Debug.LogError("More Than One Instance of Singleton!");
         }
     }
-    // Start is called before the first frame update
-    void Start()
+    #endregion
+    private void Start()
     {
-        
+        if (bloom_Enable)
+        {
+            bloomScript = Camera.main.AddComponent<Bloom>();
+        }
+        if (radiaBlur_Enable)
+        {
+            radialBlurScript = Camera.main.AddComponent<RadiaBlur>();
+        }
+        InitializePostEffects();
     }
-
-    // Update is called once per frame
-    void Update()
+    public void InitializePostEffects()
     {
-        
+        SetUpBloom(bloom_Enable, bloom_Intensity, bloom_Threshold);
+        SetUpRadiaBlur(radiaBlur_Enable, radiaBlur_Level, radiaBlur_BufferRadius, radiaBlur_CenterY, radiaBlur_CenterX);
+    }
+    public void SetUpBloom(bool enable, float intensity, float threshold)
+    {
+        if (!bloom_Enable)
+        {
+            Debug.Log("Bloom is not enabled");
+            return;
+        }
+        bloomScript.enabled = enable;
+        bloomScript.Intensity = intensity; 
+        bloomScript.Threshold = threshold;
+    }
+    public void SetUpRadiaBlur(bool enable, float level, float bufferRadius, float centerX, float centerY)
+    {
+        if (!radiaBlur_Enable)
+        {
+            Debug.Log("Radial Blur is not enabled");
+            return;
+        }
+        radialBlurScript.enabled = enable;
+        radialBlurScript.Level = level;
+        radialBlurScript.BufferRadius = bufferRadius;
+        radialBlurScript.CenterX = centerX;
+        radialBlurScript.CenterY = centerY;
     }
 }
