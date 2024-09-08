@@ -59,6 +59,9 @@ public class Player : MonoBehaviour
     {
         currentBullet = 6;
         UIManager.Instance.UpdateBulletUI(currentBullet);
+        //TODO: Add a sound effect here, collect a reload sound effect online,
+        //drag it into Resources/Audio folder. Then follow the example of add 
+        //SE for gun shot to add it.
     }
     public void GetHit()
     {
