@@ -54,6 +54,8 @@ public class Player : MonoBehaviour
         pos.z = 3f;
         Instantiate(shotVFX, pos, Quaternion.identity);
         AudioSource.PlayClipAtPoint(shotSE, transform.position);
+        //Add radial blur effects
+        PostEffectsManager.Instance.SetUpRadiaBlur(true, 10, 1, mousePos.x / Screen.width, mousePos.y / Screen.height);
     }
     private void Reload()
     {

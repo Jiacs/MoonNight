@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     private float spawnTimer;
     private int zombieCount_hasSpawned = 0;
     private float zombieSpawnInterval = 1;
-    private PostEffectsManager postEffectsManager;
 
     private static bool gameStart = false;
     public static bool GameStarted => gameStart;
@@ -23,7 +22,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        postEffectsManager = GetComponent<PostEffectsManager>();
         customCursorTexture = Resources.Load<Texture2D>("Art/Shot");
     }
     void Update()
@@ -32,6 +30,7 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
+        PostEffectsManager.Instance.RemoveRadialBlur(0.2f);
         if(zombieCount_hasSpawned >= maxZombieCount)
         { return; }
         spawnTimer += Time.deltaTime;
@@ -45,7 +44,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        postEffectsManager.InitializePostEffects();
+        PostEffectsManager.Instance.InitializePostEffects();
         gameStart = true;
         Cursor.SetCursor(customCursorTexture, new Vector2(customCursorTexture.width/2, customCursorTexture.height/2), CursorMode.ForceSoftware);
     }

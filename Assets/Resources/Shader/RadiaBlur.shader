@@ -44,11 +44,13 @@ Shader "Custom/RadiaBlur" {
 				fixed3 tempColor=fixed3(0,0,0);
 				fixed blurParams=distance(i.uv,center);
 
+				float stepFactor = 1.00/ceil(_Level);
+
 				for(fixed j=0;j<_Level;j++){
-					tempColor+=tex2D(_MainTex,uv*(1-0.01*j*saturate( blurParams/_BufferRadius))+center).rgb;
+					tempColor+=tex2D(_MainTex, uv*(1-0.01f*j*saturate(blurParams/_BufferRadius))+center).rgb*stepFactor;
 				}
 
-				finalColor.rgb=tempColor/_Level;
+				finalColor.rgb=tempColor;
 				finalColor.a=1;
 				return finalColor;
 			}

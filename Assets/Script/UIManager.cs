@@ -63,6 +63,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider radialBlur_BufferRadiusSlider;
     [SerializeField] private Slider radialBlur_CenterXSlider;
     [SerializeField] private Slider radialBlur_CenterYSlider;
+    [Header("Color Tint UI")]
+    [SerializeField] private Toggle colorTint_Toggle;
+    [SerializeField] private Slider colorTint_RSlider;
+    [SerializeField] private Slider colorTint_GSlider;
+    [SerializeField] private Slider colorTint_BSlider;
+    [SerializeField] private Image colorTint_SampleColor;
 
     private void Start()
     {
@@ -72,6 +78,12 @@ public class UIManager : MonoBehaviour
         bloom_IntesitySlider.onValueChanged.AddListener(delegate { UpdateBloom(); });
         bloom_ThresholdSlider.onValueChanged.AddListener(delegate { UpdateBloom(); });
         //TODO Bind Listener for rest post effects UI 
+
+        //Bind Listener for color Tint
+        colorTint_Toggle.onValueChanged.AddListener(delegate { UpdateColorTint(); });
+        colorTint_RSlider.onValueChanged.AddListener(delegate { UpdateColorTint(); });
+        colorTint_GSlider.onValueChanged.AddListener(delegate { UpdateColorTint(); });
+        colorTint_BSlider.onValueChanged.AddListener(delegate { UpdateColorTint(); });
     }
     private void initializeUIValues()
     {
@@ -81,11 +93,20 @@ public class UIManager : MonoBehaviour
         radialBlur_BufferRadiusSlider.value = PostEffectsManager.Instance.radiaBlur_BufferRadius;
         radialBlur_CenterXSlider.value = PostEffectsManager.Instance.radiaBlur_CenterX;
         radialBlur_CenterYSlider.value = PostEffectsManager.Instance.radiaBlur_CenterY;
+        colorTint_RSlider.value = PostEffectsManager.Instance.colorTint_Color.r * 255;
+        colorTint_GSlider.value = PostEffectsManager.Instance.colorTint_Color.g * 255;
+        colorTint_BSlider.value = PostEffectsManager.Instance.colorTint_Color.b * 255;
     }
     public void UpdateBloom()
     {
         PostEffectsManager.Instance.SetUpBloom(bloom_Toggle.isOn, bloom_IntesitySlider.value, bloom_ThresholdSlider.value);
     }
     //TODO Create Update function for rest post effects UI
+    public void UpdateColorTint()
+    {
+        Color color = new Color(colorTint_RSlider.value / 255f, colorTint_GSlider.value / 255f, colorTint_BSlider.value / 255f);
+        PostEffectsManager.Instance.SetUpColorTint(colorTint_Toggle.isOn, color);
+        colorTint_SampleColor.color = color;
+    }
     #endregion
 }

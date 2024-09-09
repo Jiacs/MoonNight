@@ -35,23 +35,4 @@ public class RadiaBlur : MonoBehaviour
             Graphics.Blit(src, dest);
         }
     }
-    public void BlurEffect(float level, float speed = 30)
-    {
-        StartCoroutine(BlurEffectCoroutine(level, speed));
-    }
-    private IEnumerator BlurEffectCoroutine(float level, float speed)
-    {
-        while(Level < level)
-        {
-            Level += Time.deltaTime * speed;
-            yield return null;
-        }
-        Level = level;
-        while(Level > 1)
-        {
-            Level -= Time.deltaTime * speed * 2;
-            yield return null;
-        }
-        Level = 1;
-    }
 }
