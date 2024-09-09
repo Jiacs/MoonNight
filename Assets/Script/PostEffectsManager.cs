@@ -120,9 +120,10 @@ public class PostEffectsManager : MonoBehaviour
         float timer = 0;
         while (timer <= time)
         {
-            colorTintScript.TintColor.r += offset_r;
-            colorTintScript.TintColor.g += offset_g;
-            colorTintScript.TintColor.b += offset_b;
+            colorTintScript.TintColor.r += offset_r * Time.deltaTime;
+            colorTintScript.TintColor.g += offset_g * Time.deltaTime; ;
+            colorTintScript.TintColor.b += offset_b * Time.deltaTime; ;
+            timer += Time.deltaTime;
             yield return null;
         }
         colorTintScript.TintColor = color;

@@ -43,7 +43,6 @@ public class Player : MonoBehaviour
         ray = Camera.main.ScreenPointToRay(mousePos);
         if (Physics.Raycast(ray, out hit))
         {
-            Debug.Log(hit.collider.gameObject.name);
             obj = hit.collider.gameObject;
             if (obj.tag == "Enemy")
             {
@@ -68,16 +67,23 @@ public class Player : MonoBehaviour
     public void GetHit()
     {
         //Instantiate(HitParticle, canvas.transform);
+        if(currentHP <= 0)
+        {
+            return;
+        }
         Debug.Log("Player Get Hit!");
         currentHP--;
-        if(currentHP == 0)
+        UIManager.Instance.UpdateHPUI(currentHP);
+        if (currentHP == 0)
         {
             Dead();
+            return;
         }
-        UIManager.Instance.UpdateHPUI(currentHP);
+        StartCoroutine(PostEffectsManager.Instance.GradientTintColor(new Color(1, 0.2f * currentHP, 0.2f * currentHP), 1));
     }
     public void Dead()
     {
+        StartCoroutine(PostEffectsManager.Instance.GradientTintColor(Color.black, 3));
         Debug.Log("Game Over");
     }
 }
