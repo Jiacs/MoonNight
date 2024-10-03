@@ -27,8 +27,23 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject BulletUI;
     public void UpdateHPUI(int currentHP)
     {
-        //TODO: This function will be called when player's HP changes.
-        //follow the example of UpdateBulletUI to Update HP UI.
+        int count = HPUI.transform.childCount;
+        if(currentHP > count)
+        {
+            Debug.LogError("Invalid HP amount, greater than capacity");
+            return;
+        }
+        for(int i = 0; i < count; i++)
+        {
+            if (i < currentHP)
+            {
+                HPUI.transform.GetChild(i).gameObject.SetActive(true);
+            }
+            else
+            {
+                HPUI.transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
     }
     public void UpdateBulletUI(int currentBullet)
     {
