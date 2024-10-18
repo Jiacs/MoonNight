@@ -2,7 +2,7 @@ Shader "Custom/ColorTint"
 {
     Properties
     {
-        _MainTex("Texture",2D)="while"{}
+        _MainTex("Texture",2D)="white"{}
         _Color ("Color", Color) = (1, 1, 1, 1) 
     }
     SubShader
@@ -27,7 +27,6 @@ Shader "Custom/ColorTint"
             struct v2f
             {
                 float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
 
