@@ -92,8 +92,12 @@ public class UIManager : MonoBehaviour
         bloom_Toggle.onValueChanged.AddListener(delegate { UpdateBloom(); });
         bloom_IntesitySlider.onValueChanged.AddListener(delegate { UpdateBloom(); });
         bloom_ThresholdSlider.onValueChanged.AddListener(delegate { UpdateBloom(); });
-        //TODO Bind Listener for rest post effects UI 
 
+        radialBlur_Toggle.onValueChanged.AddListener(delegate {updateRadialBlur(); });
+        radialBlur_LevelSlider.onValueChanged.AddListener(delegate {updateRadialBlur(); });
+        radialBlur_BufferRadiusSlider.onValueChanged.AddListener(delegate {updateRadialBlur(); });
+        radialBlur_CenterXSlider.onValueChanged.AddListener(delegate {updateRadialBlur(); });
+        radialBlur_CenterYSlider.onValueChanged.AddListener(delegate {updateRadialBlur(); });
         //Bind Listener for color Tint
         colorTint_Toggle.onValueChanged.AddListener(delegate { UpdateColorTint(); });
         colorTint_RSlider.onValueChanged.AddListener(delegate { UpdateColorTint(); });
@@ -117,6 +121,18 @@ public class UIManager : MonoBehaviour
         PostEffectsManager.Instance.SetUpBloom(bloom_Toggle.isOn, bloom_IntesitySlider.value, bloom_ThresholdSlider.value);
     }
     //TODO Create Update function for rest post effects UI
+
+    private void updateRadialBlur()
+    {
+        PostEffectsManager.Instance.SetUpRadiaBlur(
+            radialBlur_Toggle.isOn, 
+            radialBlur_LevelSlider.value, 
+            radialBlur_BufferRadiusSlider.value,
+            radialBlur_CenterXSlider.value,
+            radialBlur_CenterYSlider.value
+        );
+    }
+
     public void UpdateColorTint()
     {
         Color color = new Color(colorTint_RSlider.value / 255f, colorTint_GSlider.value / 255f, colorTint_BSlider.value / 255f);
