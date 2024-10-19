@@ -85,6 +85,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider colorTint_BSlider;
     [SerializeField] private Image colorTint_SampleColor;
 
+    [Header("Image Blend UI")]
+    [SerializeField] private Toggle imageBlend_Toggle;
+    [SerializeField] private Slider imageBlend_AlphaSlider;
+    [SerializeField] private Image imageBlend_Image;
+
+    private Texture2D imageBlend_Texture;
+
     private void Start()
     {
         initializeUIValues();
@@ -103,6 +110,8 @@ public class UIManager : MonoBehaviour
         colorTint_RSlider.onValueChanged.AddListener(delegate { UpdateColorTint(); });
         colorTint_GSlider.onValueChanged.AddListener(delegate { UpdateColorTint(); });
         colorTint_BSlider.onValueChanged.AddListener(delegate { UpdateColorTint(); });
+
+        imageBlend_AlphaSlider.onValueChanged.AddListener(delegate { UpdateImageBlend(); });
     }
     private void initializeUIValues()
     {
@@ -115,6 +124,14 @@ public class UIManager : MonoBehaviour
         colorTint_RSlider.value = PostEffectsManager.Instance.colorTint_Color.r * 255;
         colorTint_GSlider.value = PostEffectsManager.Instance.colorTint_Color.g * 255;
         colorTint_BSlider.value = PostEffectsManager.Instance.colorTint_Color.b * 255;
+        imageBlend_AlphaSlider.value = PostEffectsManager.Instance.imageBlend_Alpha;
+        imageBlend_Texture = PostEffectsManager.Instance.imageBlend_Texture;
+
+        imageBlend_Image.sprite = Sprite.Create(
+            imageBlend_Texture, 
+            new Rect(0, 0, imageBlend_Texture.width, imageBlend_Texture.height), 
+            new Vector2(0.5f, 0.5f)
+        );
     }
     public void UpdateBloom()
     {
@@ -138,6 +155,11 @@ public class UIManager : MonoBehaviour
         Color color = new Color(colorTint_RSlider.value / 255f, colorTint_GSlider.value / 255f, colorTint_BSlider.value / 255f);
         PostEffectsManager.Instance.SetUpColorTint(colorTint_Toggle.isOn, color);
         colorTint_SampleColor.color = color;
+    }
+
+    public void UpdateImageBlend()
+    {
+        PostEffectsManager.Instance.SetUpImageBlend(imageBlend_Toggle.isOn, imageBlend_Texture, imageBlend_AlphaSlider.value);
     }
     #endregion
 }
