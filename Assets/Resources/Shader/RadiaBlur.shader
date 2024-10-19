@@ -1,6 +1,6 @@
 Shader "Custom/RadiaBlur" {
 	Properties {
-		_MainTex("Texture",2D)="while"{}
+		_MainTex("Texture",2D)="white"{}
 		_Level("Level",Range(1,100))=10
 		_CenterX("Center_X",Range(0,1))=0.5
 		_CenterY("Center_Y",Range(0,1))=0.5
