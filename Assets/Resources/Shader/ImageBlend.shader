@@ -1,9 +1,10 @@
-Shader "Custom/ColorTint"
+Shader "Custom/ImageBlend"
 {
     Properties
     {
         _MainTex("Texture",2D)="white"{}
-        _Color ("Color", Color) = (1, 1, 1, 1) 
+        _ImageTex("ImageTexture", 2D)="white"{}
+        _Alpha ("Alpha", Range(0,1))=0
     }
     SubShader
     {
@@ -32,7 +33,9 @@ Shader "Custom/ColorTint"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            float4 _Color;
+            sampler2D _ImageTex;
+            float4 _ImageTex_ST;
+            float _Alpha;
 
             v2f vert (appdata v)
             {
@@ -44,8 +47,9 @@ Shader "Custom/ColorTint"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
-                return col * _Color;
+                fixed3 col = tex2D(_MainTex, i.uv);
+                fixed3 imageCol = tex2D(_ImageTex, i.uv);
+                return fixed4(col * (1 - _Alpha) + imageCol * _Alpha, 1.0);
             }
             ENDCG
         }

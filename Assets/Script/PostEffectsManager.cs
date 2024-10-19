@@ -28,6 +28,13 @@ public class PostEffectsManager : MonoBehaviour
     public Color colorTint_Color = Color.white;
     private ColorTint colorTintScript;
 
+    [Header("ImageBlend - Initialize")]
+    [SerializeField] private bool imageBlend_Enable;
+    public Texture2D imageBlend_Texture;
+    [Range(0, 1)]
+    public float imageBlend_Alpha = 0.5f;
+    private ImageBlend imageBlendScript;
+
 
     #region Singleton
     private static PostEffectsManager instance;
@@ -59,6 +66,10 @@ public class PostEffectsManager : MonoBehaviour
         {
             colorTintScript = Camera.main.AddComponent<ColorTint>();
         }
+        if(imageBlend_Enable)
+        {
+            imageBlendScript = Camera.main.AddComponent<ImageBlend>();
+        }
         InitializePostEffects();
     }
     public void InitializePostEffects()
@@ -66,6 +77,7 @@ public class PostEffectsManager : MonoBehaviour
         SetUpBloom(bloom_Enable, bloom_Intensity, bloom_Threshold);
         SetUpRadiaBlur(radiaBlur_Enable, radiaBlur_Level, radiaBlur_BufferRadius, radiaBlur_CenterY, radiaBlur_CenterX);
         SetUpColorTint(colorTint_Enable, colorTint_Color);
+        SetUpImageBlend(imageBlend_Enable, imageBlend_Texture, imageBlend_Alpha);
     }
     public void SetUpBloom(bool enable, float intensity, float threshold)
     {
@@ -100,6 +112,19 @@ public class PostEffectsManager : MonoBehaviour
         }
         colorTintScript.enabled = enable;
         colorTintScript.TintColor = color;
+    }
+
+    public void SetUpImageBlend(bool enable, Texture2D imageTexture, float alpha)
+    {
+        if(!imageBlend_Texture)
+        {
+            Debug.Log("Blend Image is not enabled");
+            return;
+        }
+
+        imageBlendScript.enabled = enable;
+        imageBlendScript.imageTexture = imageTexture;
+        imageBlendScript.alpha = alpha;
     }
     public void RemoveRadialBlur(float speed = 1)
     {
