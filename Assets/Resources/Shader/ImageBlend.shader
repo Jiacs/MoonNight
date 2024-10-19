@@ -47,9 +47,9 @@ Shader "Custom/ImageBlend"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed3 col = tex2D(_MainTex, i.uv);
-                fixed3 imageCol = tex2D(_ImageTex, i.uv);
-                return fixed4(col * (1 - _Alpha) + imageCol * _Alpha, 1.0);
+                fixed4 col = tex2D(_MainTex, i.uv);
+                fixed4 imageCol = tex2D(_ImageTex, i.uv);
+                return col * (1 - _Alpha) + imageCol * _Alpha;
             }
             ENDCG
         }
