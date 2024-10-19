@@ -49,6 +49,10 @@ Shader "Custom/ImageBlend"
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 imageCol = tex2D(_ImageTex, i.uv);
+                if(imageCol.a == 0)
+                {
+                    return col;
+                }
                 return col * (1 - _Alpha) + imageCol * _Alpha;
             }
             ENDCG
