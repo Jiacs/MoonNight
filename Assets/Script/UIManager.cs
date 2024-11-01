@@ -126,7 +126,6 @@ public class UIManager : MonoBehaviour
         colorTint_BSlider.value = PostEffectsManager.Instance.colorTint_Color.b * 255;
         imageBlend_AlphaSlider.value = PostEffectsManager.Instance.imageBlend_Alpha;
         imageBlend_Texture = PostEffectsManager.Instance.imageBlend_Texture;
-
         imageBlend_Image.sprite = Sprite.Create(
             imageBlend_Texture, 
             new Rect(0, 0, imageBlend_Texture.width, imageBlend_Texture.height), 
@@ -159,6 +158,12 @@ public class UIManager : MonoBehaviour
 
     public void UpdateImageBlend()
     {
+        imageBlend_Texture = Camera.main.GetComponent<ImageBlend>().imageTexture;
+        imageBlend_Image.sprite = Sprite.Create(
+            imageBlend_Texture,
+            new Rect(0, 0, imageBlend_Texture.width, imageBlend_Texture.height),
+            new Vector2(0.5f, 0.5f)
+        );
         PostEffectsManager.Instance.SetUpImageBlend(imageBlend_Toggle.isOn, imageBlend_Texture, imageBlend_AlphaSlider.value);
     }
     #endregion

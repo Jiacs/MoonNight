@@ -6351,6 +6351,9 @@ MonoBehaviour:
   colorTint_GSlider: {fileID: 638386557}
   colorTint_BSlider: {fileID: 783516394}
   colorTint_SampleColor: {fileID: 275381690}
+  imageBlend_Toggle: {fileID: 2101594090}
+  imageBlend_AlphaSlider: {fileID: 1816632840}
+  imageBlend_Image: {fileID: 2142069111}
 --- !u!1001 &1078963099
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9876,8 +9879,8 @@ MonoBehaviour:
   m_HandleRect: {fileID: 860414619}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 255
-  m_WholeNumbers: 1
+  m_MaxValue: 1
+  m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
