@@ -112,6 +112,7 @@ public class UIManager : MonoBehaviour
         colorTint_BSlider.onValueChanged.AddListener(delegate { UpdateColorTint(); });
 
         imageBlend_AlphaSlider.onValueChanged.AddListener(delegate { UpdateImageBlend(); });
+        imageBlend_Toggle.onValueChanged.AddListener(delegate { UpdateImageBlend(); });
     }
     private void initializeUIValues()
     {

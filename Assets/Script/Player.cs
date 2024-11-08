@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-        if(!GameManager.GameStarted)
+        if(!GameManager.GameStarted || currentHP == 0)
         {
             return;
         }
@@ -47,6 +47,10 @@ public class Player : MonoBehaviour
             if (obj.tag == "Enemy")
             {
                 obj.GetComponent<Enemy>().GetHit(20);
+            }
+            else if (obj.tag == "EnemyHead")
+            {
+                obj.GetComponentInParent<Enemy>().GetHit(50);
             }
         }
         Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 2.54f));
