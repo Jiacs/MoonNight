@@ -25,13 +25,15 @@ public class UIManager : MonoBehaviour
     #region GameUI
     [SerializeField] private GameObject HPUI;
     [SerializeField] private GameObject BulletUI;
+    [SerializeField] private GameObject BulletPre;
+    [SerializeField] private GameObject HPPre;
     public void UpdateHPUI(int currentHP)
     {
         int count = HPUI.transform.childCount;
         if(currentHP > count)
         {
-            Debug.LogError("Invalid HP amount, greater than capacity");
-            return;
+            Instantiate(HPPre, HPUI.transform);
+            UpdateHPUI(currentHP);
         }
         for(int i = 0; i < count; i++)
         {
@@ -50,8 +52,8 @@ public class UIManager : MonoBehaviour
         int count = BulletUI.transform.childCount;
         if(currentBullet > count)
         {
-            Debug.LogError("Invalid bullet amount, greater than capacity");
-            return;
+            Instantiate(BulletPre, BulletUI.transform);
+            UpdateBulletUI(currentBullet);
         }
         for(int i = 0; i < count; i++)
         {

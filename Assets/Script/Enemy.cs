@@ -100,5 +100,10 @@ public class Enemy : MonoBehaviour
         isDead = true;
         animator.SetTrigger("Dead");
         animator.SetBool("IsDead", true);
+        GameManager.zombieCount--;
+    }
+    public void SetLevel(int level)
+    {
+        currentHP *= 1 + 0.1f * level;
     }
 }
