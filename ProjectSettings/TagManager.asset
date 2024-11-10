@@ -9,6 +9,7 @@ TagManager:
   - GameManager
   - Bullet
   - EnemyHead
+  - OptionBlock
   layers:
   - Default
   - TransparentFX

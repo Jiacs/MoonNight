@@ -11,13 +11,32 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int zombieCountPerWave;
     [SerializeField] private float zombieSpawnInterval = 1;
     [SerializeField] private Player player;
+    [SerializeField] private Transform[] rewardBlockTransform;
+    [SerializeField] private GameObject rewardBlockPref;
     public static int zombieCount = 0;
 
     private static bool gameStart = false;
     public static bool GameStarted => gameStart;
+    public static bool chooseRewardPhase = false;
 
     private Texture2D customCursorTexture;
 
+    #region Singleton
+    private static GameManager instance;
+    public static GameManager Instance => instance;
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.Log(this.gameObject.name);
+            Debug.LogError("More Than One Instance of Singleton!");
+        }
+    }
+    #endregion
     private void Start()
     {
         customCursorTexture = Resources.Load<Texture2D>("Art/Shot");
@@ -46,6 +65,7 @@ public class GameManager : MonoBehaviour
             yield return SpawnZombies(zombieCountPerWave + Random.Range(0, waveCount), waveCount);
             yield return Wave();
             yield return ChooseReward();
+            waveCount++;
         }
     }
     private IEnumerator Wave()
@@ -57,12 +77,27 @@ public class GameManager : MonoBehaviour
     }
     private IEnumerator ChooseReward()
     {
-        player.Enhance(Buff.BulletCapIncrease);
-        player.Enhance(Buff.HPCountIncrease);
-        player.Enhance(Buff.DamageIncrease);
-        player.Enhance(Buff.RecoverAllHP);
-
+        chooseRewardPhase = true;
+        List<Buff> buffList = BuffSelector.GetRandomBuffs(3);
+        List<GameObject> rewardBlocks = new List<GameObject>();
+        for(int i = 0; i < 3; i++)
+        {
+            rewardBlocks.Add(Instantiate(rewardBlockPref, rewardBlockTransform[i]));
+            rewardBlocks[i].GetComponent<OptionBlock>().SetBuff(buffList[i]);
+        }
+        while (chooseRewardPhase)
+        {
+            yield return null;
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            Destroy(rewardBlocks[i]);
+        }
         yield return null;
+    }
+    public void EnhancePlayer(Buff buff)
+    {
+        player.Enhance(buff);
     }
     #region spawnZombie
 

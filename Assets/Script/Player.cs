@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -58,6 +60,10 @@ public class Player : MonoBehaviour
             {
                 obj.GetComponentInParent<Enemy>().GetHit(3*damage);
             }
+            else if (obj.tag == "OptionBlock")
+            {
+                obj.GetComponent<OptionBlock>().GetHit();
+            }
         }
         Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 2.54f));
         pos.z = 3f;
@@ -110,7 +116,7 @@ public class Player : MonoBehaviour
                 UIManager.Instance.UpdateHPUI(currentHP);
                 break;
             case Buff.DamageIncrease:
-                damage = (int)(1.5 * damage);
+                damage = (int)(1.1 * damage);
                 break;
             case Buff.RecoverAllHP:
                 currentHP = maxHP;
@@ -118,12 +124,4 @@ public class Player : MonoBehaviour
                 break;
         }
     }
-}
-
-public enum Buff
-{
-    BulletCapIncrease,
-    HPCountIncrease,
-    DamageIncrease,
-    RecoverAllHP
 }
