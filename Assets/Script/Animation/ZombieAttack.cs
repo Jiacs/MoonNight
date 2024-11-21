@@ -5,6 +5,7 @@ using UnityEngine;
 public class ZombieAttack : StateMachineBehaviour
 {
     float timer;
+    float attackDelay;
     bool hasHitted;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -12,24 +13,38 @@ public class ZombieAttack : StateMachineBehaviour
         animator.applyRootMotion = false;
         timer = 0;
         hasHitted = false;
+        attackDelay = animator.GetComponent<Enemy>().attackDelay;
+        if (animator.GetComponent<Boss>())
+        {
+            animator.GetComponent<Boss>().ShowWeakPoints();
+            Time.timeScale -= 0.6f;
+        }
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         timer += Time.deltaTime;
-        if(timer >= animator.GetComponent<Enemy>().attackDelay && !hasHitted)
+        if(timer >= attackDelay && !hasHitted)
         {
             animator.GetComponent<Enemy>().HitPlayer();
             hasHitted = true;
+            if (animator.GetComponent<Boss>())
+            {
+                Time.timeScale += 0.6f;
+            }
         }
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.GetComponent<Boss>()?.RemoveAllWeakPoints();
+        if (animator.GetComponent<Boss>() && !hasHitted)
+        {
+            Time.timeScale += 0.6f;
+        }
+    }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

@@ -64,6 +64,11 @@ public class Player : MonoBehaviour
             {
                 obj.GetComponent<OptionBlock>().GetHit();
             }
+            else if (obj.tag == "BossWeakPoint")
+            {
+                obj.GetComponent<EnemyWeakPoints>().GetHit(damage);
+                Debug.Log("weak point!");
+            }
         }
         Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 2.54f));
         pos.z = 3f;
@@ -80,6 +85,7 @@ public class Player : MonoBehaviour
         //drag it into Resources/Audio folder. Then follow the example of add 
         //SE for gun shot to add it.
     }
+    Coroutine BlendBloodCoroutine;
     public void GetHit()
     {
         //Instantiate(HitParticle, canvas.transform);
@@ -88,6 +94,11 @@ public class Player : MonoBehaviour
             return;
         }
         Debug.Log("Player Get Hit!");
+        if(BlendBloodCoroutine != null)
+        {
+            StopCoroutine(BlendBloodCoroutine);
+        }
+        BlendBloodCoroutine = StartCoroutine(BlendBloodImage());
         currentHP--;
         UIManager.Instance.UpdateHPUI(currentHP);
         if (currentHP == 0)
@@ -96,6 +107,22 @@ public class Player : MonoBehaviour
             return;
         }
         StartCoroutine(PostEffectsManager.Instance.GradientTintColor(new Color(1, 0.2f * currentHP, 0.2f * currentHP), 1));
+    }
+    private IEnumerator BlendBloodImage()
+    {
+        ImageBlend imageBlendScript = Camera.main.GetComponent<ImageBlend>();
+        imageBlendScript.imagePos = new Vector2(UnityEngine.Random.Range(0.1f, 0.3f), UnityEngine.Random.Range(-0.1f, 0.1f));
+        while(imageBlendScript.alpha < 1)
+        {
+            imageBlendScript.alpha += Time.deltaTime * 10;
+            yield return null;
+        }
+        yield return new WaitForSeconds(0.1f);
+        while (imageBlendScript.alpha > 0)
+        {
+            imageBlendScript.alpha -= Time.deltaTime * 3;
+            yield return null;
+        }
     }
     public void Dead()
     {

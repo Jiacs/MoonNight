@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float maxHP;
-    [SerializeField] private float attackDistance;
-    [SerializeField] private float attackCD;
-    private float attackTimer;
-    [SerializeField] private float roarCD;
-    [SerializeField] private float moveSpeed;
-    private float roarTimer;
+    [SerializeField] protected float maxHP;
+    [SerializeField] protected float attackDistance;
+    [SerializeField] protected float attackCD;
+    protected float attackTimer;
+    [SerializeField] protected float roarCD;
+    [SerializeField] protected float moveSpeed;
+    protected float roarTimer;
     public float attackDelay;
-    private float currentHP;
-    private Animator animator;
-    private bool isDead = false;
-    private static GameObject player;
-    private void Awake()
+    protected float currentHP;
+    protected Animator animator;
+    protected bool isDead = false;
+    protected static GameObject player;
+    protected int level;
+    protected void Awake()
     {
         if(player == null)
         {
@@ -31,7 +32,7 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         roarTimer += Time.deltaTime;
         attackTimer += Time.deltaTime;
@@ -49,7 +50,7 @@ public class Enemy : MonoBehaviour
             Attack();
         }
     }
-    private void Attack()
+    protected virtual void Attack()
     {
         if(attackTimer<attackCD)
         {
@@ -66,7 +67,7 @@ public class Enemy : MonoBehaviour
     {
         player.GetComponent<Player>().GetHit();
     }
-    private void Roar()
+    protected void Roar()
     {
         if (roarTimer < roarCD)
         {
@@ -75,13 +76,13 @@ public class Enemy : MonoBehaviour
         roarTimer = 0;
         animator.SetTrigger("Roar");
     }
-    private void FaceToPlayer()
+    protected void FaceToPlayer()
     {
         Vector3 dir = player.transform.position - this.transform.position;
         dir.y = 0;
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(dir), 0.3f);
     }
-    public void GetHit(float damage)
+    public virtual void GetHit(float damage)
     {
         if(isDead)
         {
@@ -95,7 +96,7 @@ public class Enemy : MonoBehaviour
             Dead();
         }
     }
-    public void Dead()
+    public virtual void Dead()
     {
         isDead = true;
         animator.SetTrigger("Dead");
@@ -104,6 +105,7 @@ public class Enemy : MonoBehaviour
     }
     public void SetLevel(int level)
     {
+        this.level = level;
         currentHP *= 1 + 0.1f * level;
     }
 }

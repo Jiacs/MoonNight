@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Player player;
     [SerializeField] private Transform[] rewardBlockTransform;
     [SerializeField] private GameObject rewardBlockPref;
+    [SerializeField] private GameObject bossPre;
+    [SerializeField] private Transform bossSpawnPoint;
     public static int zombieCount = 0;
 
     private static bool gameStart = false;
@@ -62,9 +65,20 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         while(!Player.isDead)
         {
-            yield return SpawnZombies(zombieCountPerWave + Random.Range(0, waveCount), waveCount);
-            yield return Wave();
-            yield return ChooseReward();
+            if (waveCount % 10 != 0)
+            {
+                yield return SpawnZombies(zombieCountPerWave + UnityEngine.Random.Range(0, waveCount), waveCount);
+                yield return Wave();
+                yield return new WaitForSeconds(2f);
+                yield return ChooseReward();
+            }
+            else
+            {
+                yield return SpawnBoss(waveCount);
+                yield return BossFight();
+                yield return new WaitForSeconds(2f);
+                yield return ChooseRewardBoss();
+            }
             waveCount++;
         }
     }
@@ -95,6 +109,26 @@ public class GameManager : MonoBehaviour
         }
         yield return null;
     }
+    private IEnumerator ChooseRewardBoss()
+    {
+        chooseRewardPhase = true;
+        List<Buff> buffList = BuffSelector.GetRandomBuffs(3);
+        List<GameObject> rewardBlocks = new List<GameObject>();
+        for (int i = 0; i < 3; i++)
+        {
+            rewardBlocks.Add(Instantiate(rewardBlockPref, rewardBlockTransform[i]));
+            rewardBlocks[i].GetComponent<OptionBlock>().SetBuff(buffList[i]);
+        }
+        while (chooseRewardPhase)
+        {
+            yield return null;
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            Destroy(rewardBlocks[i]);
+        }
+        yield return null;
+    }
     public void EnhancePlayer(Buff buff)
     {
         player.Enhance(buff);
@@ -103,7 +137,7 @@ public class GameManager : MonoBehaviour
 
     private void SpawnZombie(int zombieLevel)
     {
-        int index = Random.Range(0, spawnPoints.Length);
+        int index = UnityEngine.Random.Range(0, spawnPoints.Length);
         GameObject zombie = Instantiate(zombiePre, spawnPoints[index].position, spawnPoints[index].rotation);
         zombie.GetComponent<Enemy>().SetLevel(zombieLevel);
         zombieCount++;
@@ -116,6 +150,21 @@ public class GameManager : MonoBehaviour
             SpawnZombie(zombieLevel);
             currentSpawnZombie++;
             yield return new WaitForSeconds(zombieSpawnInterval);
+        }
+    }
+    public bool BossAlive = false;
+    private IEnumerator SpawnBoss(int bossLevel)
+    {
+        GameObject boss = Instantiate(bossPre, bossSpawnPoint.position, bossSpawnPoint.rotation);
+        boss.GetComponent<Enemy>().SetLevel(bossLevel);
+        BossAlive = true;
+        yield return null;
+    }
+    private IEnumerator BossFight()
+    {
+        while(BossAlive && !Player.isDead)
+        {
+            yield return null;
         }
     }
     #endregion
