@@ -34,6 +34,8 @@ public class PostEffectsManager : MonoBehaviour
     [Range(0, 1)]
     public float imageBlend_Alpha = 0.5f;
     private ImageBlend imageBlendScript;
+    public Vector2 imageBlend_ImagePos;
+    public Vector2 imageBlend_ImageScale;
 
 
     #region Singleton
@@ -77,7 +79,7 @@ public class PostEffectsManager : MonoBehaviour
         SetUpBloom(bloom_Enable, bloom_Intensity, bloom_Threshold);
         SetUpRadiaBlur(radiaBlur_Enable, radiaBlur_Level, radiaBlur_BufferRadius, radiaBlur_CenterY, radiaBlur_CenterX);
         SetUpColorTint(colorTint_Enable, colorTint_Color);
-        SetUpImageBlend(imageBlend_Enable, imageBlend_Texture, imageBlend_Alpha);
+        SetUpImageBlend(imageBlend_Enable, imageBlend_Texture, imageBlend_Alpha, imageBlend_ImagePos, imageBlend_ImageScale);
     }
     public void SetUpBloom(bool enable, float intensity, float threshold)
     {
@@ -114,7 +116,7 @@ public class PostEffectsManager : MonoBehaviour
         colorTintScript.TintColor = color;
     }
 
-    public void SetUpImageBlend(bool enable, Texture2D imageTexture, float alpha)
+    public void SetUpImageBlend(bool enable, Texture2D imageTexture, float alpha, Vector2 imagePos, Vector2 imageScale)
     {
         if(!imageBlend_Texture)
         {
@@ -125,6 +127,8 @@ public class PostEffectsManager : MonoBehaviour
         imageBlendScript.enabled = enable;
         imageBlendScript.imageTexture = imageTexture;
         imageBlendScript.alpha = alpha;
+        imageBlendScript.imagePos = imagePos;
+        imageBlendScript.imageScale = imageScale;
     }
     public void RemoveRadialBlur(float speed = 1)
     {

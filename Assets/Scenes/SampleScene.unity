@@ -3434,6 +3434,37 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &557413854
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 557413855}
+  m_Layer: 0
+  m_Name: BossSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &557413855
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557413854}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.2, y: 0, z: 22.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1615628385}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &570465049
 GameObject:
   m_ObjectHideFlags: 0
@@ -6047,6 +6078,9 @@ MonoBehaviour:
   - {fileID: 1922817988}
   - {fileID: 492653003}
   rewardBlockPref: {fileID: 2125969669039146240, guid: 1b36644de801ccb46956c14544e4655f, type: 3}
+  bossPre: {fileID: 4047114247901742987, guid: f840a8b78eef4f04db69bec6a28ea55a, type: 3}
+  bossSpawnPoint: {fileID: 557413855}
+  BossAlive: 0
 --- !u!114 &1065988861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6072,6 +6106,8 @@ MonoBehaviour:
   imageBlend_Enable: 1
   imageBlend_Texture: {fileID: 2800000, guid: 3906b274866f35341bc23d93520baa6d, type: 3}
   imageBlend_Alpha: 0
+  imageBlend_ImagePos: {x: 0, y: 0}
+  imageBlend_ImageScale: {x: 0.7, y: 1}
 --- !u!114 &1065988862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9159,6 +9195,7 @@ Transform:
   - {fileID: 464731912}
   - {fileID: 799206100}
   - {fileID: 120684120}
+  - {fileID: 557413855}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

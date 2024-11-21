@@ -5,14 +5,10 @@ using UnityEngine;
 public class ImageBlend : MonoBehaviour
 {
     private Material ImageBlendMaterial;
-
     public Texture2D imageTexture;
-
     [Range(0, 1)]
     public float alpha = 1.0f;
-
     public Vector2 imagePos = new Vector2(0.5f, 0.5f);
-
     public Vector2 imageScale = new Vector2(1.0f, 1.0f);
 
     void Awake()
