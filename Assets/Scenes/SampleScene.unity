@@ -3458,7 +3458,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 557413854}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2, y: 0, z: 22.1}
+  m_LocalPosition: {x: -0.2, y: 0, z: 11.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6108,6 +6108,11 @@ MonoBehaviour:
   imageBlend_Alpha: 0
   imageBlend_ImagePos: {x: 0, y: 0}
   imageBlend_ImageScale: {x: 0.7, y: 1}
+  screenShake_Enable: 1
+  shakeFrequency: 0
+  shakeAmount: 0
+  desaturate_Enable: 1
+  desaturateAmount: 0
 --- !u!114 &1065988862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8358,7 +8363,6 @@ GameObject:
   - component: {fileID: 1448340553}
   - component: {fileID: 1448340552}
   - component: {fileID: 1448340554}
-  - component: {fileID: 1448340555}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -8444,7 +8448,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ffe3322177452c94793575a088ec4e00, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.33
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -8528,20 +8532,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1448340555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1448340549}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10d248d5a99294d49badbdfd69f8e638, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shakeFrequency: 0
-  shakeAmount: 0
 --- !u!1 &1461375469
 GameObject:
   m_ObjectHideFlags: 0

@@ -103,7 +103,7 @@ public class Enemy : MonoBehaviour
         animator.SetBool("IsDead", true);
         GameManager.zombieCount--;
     }
-    public void SetLevel(int level)
+    public virtual void SetLevel(int level)
     {
         this.level = level;
         currentHP *= 1 + 0.1f * level;

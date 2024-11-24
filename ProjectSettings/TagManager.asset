@@ -12,6 +12,7 @@ TagManager:
   - OptionBlock
   - Boss
   - BossWeakPoint
+  - Axe
   layers:
   - Default
   - TransparentFX
