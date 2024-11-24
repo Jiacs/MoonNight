@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -25,9 +26,8 @@ public class PostEffectsManager : MonoBehaviour
     private RadiaBlur radialBlurScript;
     [Header("ColorTint - Initialize")]
     [SerializeField] private bool colorTint_Enable;
-    public Color colorTint_Color = Color.white;
+    public UnityEngine.Color colorTint_Color = UnityEngine.Color.white;
     private ColorTint colorTintScript;
-
     [Header("ImageBlend - Initialize")]
     [SerializeField] private bool imageBlend_Enable;
     public Texture2D imageBlend_Texture;
@@ -36,6 +36,15 @@ public class PostEffectsManager : MonoBehaviour
     private ImageBlend imageBlendScript;
     public Vector2 imageBlend_ImagePos;
     public Vector2 imageBlend_ImageScale;
+    [Header("ScreenShake - Initialize")]
+    [SerializeField] private bool screenShake_Enable;
+    private ScreenShake screenShakeScript;
+    public float shakeFrequency = 0;
+    public float shakeAmount = 0;
+    [Header("Desaturate - Initialize")]
+    [SerializeField] private bool desaturate_Enable;
+    private Desaturate desaturateScript;
+    public float desaturateAmount = 0;
 
 
     #region Singleton
@@ -72,6 +81,14 @@ public class PostEffectsManager : MonoBehaviour
         {
             imageBlendScript = Camera.main.AddComponent<ImageBlend>();
         }
+        if(screenShake_Enable)
+        {
+            screenShakeScript = Camera.main.AddComponent<ScreenShake>();
+        }
+        if(desaturate_Enable)
+        {
+            desaturateScript = Camera.main.AddComponent<Desaturate>();
+        }
         InitializePostEffects();
     }
     public void InitializePostEffects()
@@ -80,6 +97,7 @@ public class PostEffectsManager : MonoBehaviour
         SetUpRadiaBlur(radiaBlur_Enable, radiaBlur_Level, radiaBlur_BufferRadius, radiaBlur_CenterY, radiaBlur_CenterX);
         SetUpColorTint(colorTint_Enable, colorTint_Color);
         SetUpImageBlend(imageBlend_Enable, imageBlend_Texture, imageBlend_Alpha, imageBlend_ImagePos, imageBlend_ImageScale);
+        SetUpDesaturate(desaturate_Enable, desaturateAmount);
     }
     public void SetUpBloom(bool enable, float intensity, float threshold)
     {
@@ -105,7 +123,7 @@ public class PostEffectsManager : MonoBehaviour
         radialBlurScript.CenterX = centerX;
         radialBlurScript.CenterY = centerY;
     }
-    public void SetUpColorTint(bool enable, Color color)
+    public void SetUpColorTint(bool enable, UnityEngine.Color color)
     {
         if (!colorTint_Enable)
         {
@@ -115,10 +133,9 @@ public class PostEffectsManager : MonoBehaviour
         colorTintScript.enabled = enable;
         colorTintScript.TintColor = color;
     }
-
     public void SetUpImageBlend(bool enable, Texture2D imageTexture, float alpha, Vector2 imagePos, Vector2 imageScale)
     {
-        if(!imageBlend_Texture)
+        if(!imageBlend_Enable)
         {
             Debug.Log("Blend Image is not enabled");
             return;
@@ -129,6 +146,31 @@ public class PostEffectsManager : MonoBehaviour
         imageBlendScript.alpha = alpha;
         imageBlendScript.imagePos = imagePos;
         imageBlendScript.imageScale = imageScale;
+    }
+    public void SetUpScreenShake(bool enable, float shakeFrequency, float shakeAmount)
+    {
+        if (!screenShake_Enable)
+        {
+            Debug.Log("Screen Shake is not enabled");
+            return;
+        }
+        screenShakeScript.enabled = enable;
+        if(shakeAmount < screenShakeScript.shakeAmount)
+        {
+            return;
+        }
+        screenShakeScript.shakeFrequency = shakeFrequency;
+        screenShakeScript.shakeAmount = shakeAmount;
+    }
+    public void SetUpDesaturate(bool enable, float desaturateAmount)
+    {
+        if (!desaturate_Enable)
+        {
+            Debug.Log("Desaturate is not enabled");
+            return;
+        }
+        desaturateScript.enabled = enable;
+        desaturateScript.desaturateAmount = desaturateAmount;
     }
     public void RemoveRadialBlur(float speed = 1)
     {
@@ -141,7 +183,7 @@ public class PostEffectsManager : MonoBehaviour
             }
         }
     }
-    public IEnumerator GradientTintColor(Color color, float time)
+    public IEnumerator GradientTintColor(UnityEngine.Color color, float time)
     {
         float offset_r = (color.r - colorTintScript.TintColor.r)/time;
         float offset_g = (color.g - colorTintScript.TintColor.g)/ time;
@@ -156,5 +198,44 @@ public class PostEffectsManager : MonoBehaviour
             yield return null;
         }
         colorTintScript.TintColor = color;
+    }
+    public IEnumerator ShakeScreen(float shakeAmount, float shakeFreq, float time)
+    {
+        float timer = 0;
+        float amount_off = (shakeAmount - screenShakeScript.shakeAmount) / time;
+        float freq_off = (shakeFreq - screenShakeScript.shakeFrequency) / time;
+        while(timer < time)
+        {
+            screenShakeScript.shakeAmount += amount_off * Time.deltaTime;
+            screenShakeScript.shakeFrequency += freq_off * Time.deltaTime;
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        screenShakeScript.shakeAmount = shakeAmount;
+        screenShakeScript.shakeFrequency = shakeFreq;
+    }
+    public IEnumerator DesaturateScreen(float desaturateAmount, float time)
+    {
+        float offset= (desaturateAmount - desaturateScript.desaturateAmount) / time;
+        float timer = 0;
+        while (timer <= time)
+        {
+            desaturateScript.desaturateAmount += offset * Time.deltaTime;
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        desaturateScript.desaturateAmount = desaturateAmount;
+    }
+    public IEnumerator BloomThresholdCoroutine(float threshold, float time)
+    {
+        float offset = (threshold - bloomScript.Threshold) / time;
+        float timer = 0;
+        while (timer <= time)
+        {
+            bloomScript.Threshold += offset * Time.deltaTime;
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        bloomScript.Threshold = threshold;
     }
 }
