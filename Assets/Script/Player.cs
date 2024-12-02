@@ -21,6 +21,16 @@ public class Player : MonoBehaviour
     private int damage = 20;
     private int maxHP = 5;
     private int currentHP = 5;
+    private bool autoReload = false;
+    private bool autoShot = false;
+    private float reloadInterval = 1;
+    private float autoShotTimer = 0;
+    private float shotInterval = 0.3f;
+    private float timeSlowTime = 0.5f;
+    private float timeSlowTimer;
+    private float timeSlowMult = 0.2f;
+    private bool inTimeSlow = false;
+    private Coroutine autoReloadCoroutine;
     private void Awake()
     {
         Position = transform.position;
@@ -37,14 +47,50 @@ public class Player : MonoBehaviour
         if(!GameManager.GameStarted || currentHP == 0)
         {
             return;
-        } 
+        }
+        timeSlowTimer += Time.deltaTime * 0.5f;
+        if(timeSlowTimer >= timeSlowTime)
+        {
+            timeSlowTimer = timeSlowTime;
+        }
         if (Input.GetMouseButtonDown(0))
         {
             Shot();
         }
+        if(Input.GetMouseButton(0) && autoShot)
+        {
+            //count and auto shot
+            autoShotTimer += Time.deltaTime;
+            if(autoShotTimer >= shotInterval)
+            {
+                Shot();
+                autoShotTimer = 0;
+            }
+        }
+        if(Input.GetMouseButtonUp(0))
+        {
+            autoShotTimer = 0;
+        }
         if (Input.GetMouseButtonDown(1))
         {
+            if (autoReloadCoroutine != null)
+            {
+                StopCoroutine(autoReloadCoroutine);
+            }
             Reload();
+            StartTimeSlow();
+        }
+        if(Input.GetMouseButton(1) && inTimeSlow)
+        {
+            timeSlowTimer -= Time.deltaTime;
+            if(timeSlowTimer <= 0)
+            {
+                EndTimeSlow();
+            }
+        }
+        if(Input.GetMouseButtonUp(1))
+        {
+            EndTimeSlow();
         }
     }
     private void Shot()
@@ -52,6 +98,10 @@ public class Player : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         if (currentBullet <= 0)
         {
+            if (autoReload && autoReloadCoroutine == null)
+            {
+                autoReloadCoroutine = StartCoroutine(AutoReload(reloadInterval));
+            }
             return;
         }
         currentBullet--;
@@ -95,11 +145,35 @@ public class Player : MonoBehaviour
         PostEffectsManager.Instance.SetUpScreenShake(true, 1, 0.01f);
         StartCoroutine(PostEffectsManager.Instance.ShakeScreen(0, 0, 0.2f));
     }
+    private IEnumerator AutoReload(float interval)
+    {
+        yield return new WaitForSeconds(interval);
+        Reload();
+    }
     private void Reload()
     {
         currentBullet = bulletCap;
+        autoReloadCoroutine = null;
         UIManager.Instance.UpdateBulletUI(currentBullet);
         AudioSource.PlayClipAtPoint(reloadSE, transform.position);
+    }
+    private void StartTimeSlow()
+    {
+        if (inTimeSlow)
+        {
+            return;
+        }
+        inTimeSlow = true;
+        Time.timeScale -= timeSlowMult;
+    }
+    private void EndTimeSlow()
+    {
+        if(!inTimeSlow)
+        {
+            return;
+        }
+        inTimeSlow = false;
+        Time.timeScale += timeSlowMult;
     }
     Coroutine BlendBloodCoroutine;
     public void GetHit()
@@ -174,6 +248,33 @@ public class Player : MonoBehaviour
                 PostEffectsManager.Instance.SetUpColorTint(true, Color.white);
                 UIManager.Instance.UpdateHPUI(currentHP);
                 break;
+            case Buff.AutoReload:
+                if (autoReload)
+                {
+                    reloadInterval *= 0.9f;
+                }
+                else
+                {
+                    autoReload = true;
+                }
+                break;
+            case Buff.AutoShot:
+                if (autoShot)
+                {
+                    shotInterval *= 0.9f;
+                }
+                else
+                {
+                    autoShot = true;
+                }
+                break;
+            case Buff.TimeSlowTime:
+                timeSlowTime += 0.1f;
+                break;
+            case Buff.TimeSlowMult:
+                timeSlowMult += (0.5f - timeSlowMult)* 0.3f;
+                break;
+
         }
     }
 }
