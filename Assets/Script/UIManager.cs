@@ -86,11 +86,20 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider colorTint_GSlider;
     [SerializeField] private Slider colorTint_BSlider;
     [SerializeField] private Image colorTint_SampleColor;
-
     [Header("Image Blend UI")]
     [SerializeField] private Toggle imageBlend_Toggle;
     [SerializeField] private Slider imageBlend_AlphaSlider;
-    [SerializeField] private Image imageBlend_Image;
+    [SerializeField] private Slider imageBlend_CenterXSlider;
+    [SerializeField] private Slider imageBlend_CenterYSlider;
+    [SerializeField] private Slider imageBlend_ScaleXSlider;
+    [SerializeField] private Slider imageBlend_ScaleYSlider;
+    [Header("Screen Shake UI")]
+    [SerializeField] private Toggle screenShake_Toggle;
+    [SerializeField] private Slider screenShake_FrequencySlider;
+    [SerializeField] private Slider screenShake_AmountSlider;
+    [Header("Desaturate UI")]
+    [SerializeField] private Toggle desaturate_Toggle;
+    [SerializeField] private Slider desaturate_AmountSlider;
 
     private Texture2D imageBlend_Texture;
 
@@ -115,6 +124,17 @@ public class UIManager : MonoBehaviour
 
         imageBlend_AlphaSlider.onValueChanged.AddListener(delegate { UpdateImageBlend(); });
         imageBlend_Toggle.onValueChanged.AddListener(delegate { UpdateImageBlend(); });
+        imageBlend_CenterXSlider.onValueChanged.AddListener (delegate { UpdateImageBlend(); });
+        imageBlend_CenterYSlider.onValueChanged.AddListener(delegate { UpdateImageBlend(); });
+        imageBlend_ScaleXSlider.onValueChanged.AddListener(delegate { UpdateImageBlend(); });
+        imageBlend_ScaleYSlider.onValueChanged.AddListener(delegate { UpdateImageBlend(); });
+
+        screenShake_Toggle.onValueChanged.AddListener(delegate { UpdateScreenShake(); });
+        screenShake_FrequencySlider.onValueChanged.AddListener(delegate { UpdateScreenShake(); });
+        screenShake_AmountSlider.onValueChanged.AddListener(delegate { UpdateScreenShake(); });
+
+        desaturate_Toggle.onValueChanged.AddListener(delegate { UpdateDesaturate(); });
+        desaturate_AmountSlider.onValueChanged.AddListener(delegate { UpdateDesaturate(); });
     }
     private void initializeUIValues()
     {
@@ -129,11 +149,13 @@ public class UIManager : MonoBehaviour
         colorTint_BSlider.value = PostEffectsManager.Instance.colorTint_Color.b * 255;
         imageBlend_AlphaSlider.value = PostEffectsManager.Instance.imageBlend_Alpha;
         imageBlend_Texture = PostEffectsManager.Instance.imageBlend_Texture;
-        imageBlend_Image.sprite = Sprite.Create(
-            imageBlend_Texture, 
-            new Rect(0, 0, imageBlend_Texture.width, imageBlend_Texture.height), 
-            new Vector2(0.5f, 0.5f)
-        );
+        imageBlend_CenterXSlider.value = PostEffectsManager.Instance.imageBlend_ImagePos.x;
+        imageBlend_CenterYSlider.value = PostEffectsManager.Instance.imageBlend_ImagePos.y;
+        imageBlend_ScaleXSlider.value = PostEffectsManager.Instance.imageBlend_ImageScale.x;
+        imageBlend_ScaleYSlider.value = PostEffectsManager.Instance.imageBlend_ImageScale.y;
+        screenShake_FrequencySlider.value = PostEffectsManager.Instance.shakeFrequency;
+        screenShake_AmountSlider.value = PostEffectsManager.Instance.shakeAmount;
+        desaturate_AmountSlider.value = PostEffectsManager.Instance.desaturateAmount;
     }
     public void UpdateBloom()
     {
@@ -169,7 +191,17 @@ public class UIManager : MonoBehaviour
             new Vector2(0.5f, 0.5f)
         );
         */
-        PostEffectsManager.Instance.SetUpImageBlend(imageBlend_Toggle.isOn, imageBlend_Texture, imageBlend_AlphaSlider.value, new Vector2(0.5f, 0.5f), new Vector2(1, 1));
+        PostEffectsManager.Instance.SetUpImageBlend(imageBlend_Toggle.isOn, imageBlend_Texture, imageBlend_AlphaSlider.value,
+            new Vector2(imageBlend_CenterXSlider.value, imageBlend_CenterYSlider.value), 
+            new Vector2(imageBlend_ScaleXSlider.value, imageBlend_ScaleYSlider.value));
+    }
+    public void UpdateScreenShake()
+    {
+        PostEffectsManager.Instance.SetUpScreenShake(screenShake_Toggle.isOn, screenShake_FrequencySlider.value, screenShake_AmountSlider.value, true);
+    }
+    public void UpdateDesaturate()
+    {
+        PostEffectsManager.Instance.SetUpDesaturate(desaturate_Toggle.isOn, desaturate_AmountSlider.value);
     }
     #endregion
 }

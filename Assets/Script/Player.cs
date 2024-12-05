@@ -78,9 +78,12 @@ public class Player : MonoBehaviour
                 StopCoroutine(autoReloadCoroutine);
             }
             Reload();
+        }
+        if (Input.GetMouseButtonDown(2))
+        {
             StartTimeSlow();
         }
-        if(Input.GetMouseButton(1) && inTimeSlow)
+        if (Input.GetMouseButton(2) && inTimeSlow)
         {
             timeSlowTimer -= Time.deltaTime;
             if(timeSlowTimer <= 0)
@@ -88,7 +91,7 @@ public class Player : MonoBehaviour
                 EndTimeSlow();
             }
         }
-        if(Input.GetMouseButtonUp(1))
+        if(Input.GetMouseButtonUp(2))
         {
             EndTimeSlow();
         }
@@ -98,13 +101,13 @@ public class Player : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         if (currentBullet <= 0)
         {
-            if (autoReload && autoReloadCoroutine == null)
-            {
-                autoReloadCoroutine = StartCoroutine(AutoReload(reloadInterval));
-            }
             return;
         }
         currentBullet--;
+        if (currentBullet == 0 && autoReload && autoReloadCoroutine == null)
+        {
+            autoReloadCoroutine = StartCoroutine(AutoReload(reloadInterval));
+        }
         UIManager.Instance.UpdateBulletUI(currentBullet);
         ray = Camera.main.ScreenPointToRay(mousePos);
         if (Physics.Raycast(ray, out hit))
@@ -145,24 +148,32 @@ public class Player : MonoBehaviour
         PostEffectsManager.Instance.SetUpScreenShake(true, 1, 0.01f);
         StartCoroutine(PostEffectsManager.Instance.ShakeScreen(0, 0, 0.2f));
     }
+    [SerializeField] private GameObject reloadingUI;
     private IEnumerator AutoReload(float interval)
     {
+        reloadingUI.SetActive(true);
         yield return new WaitForSeconds(interval);
+        reloadingUI.SetActive(false);
         Reload();
     }
     private void Reload()
     {
+        reloadingUI.SetActive(false);
         currentBullet = bulletCap;
         autoReloadCoroutine = null;
         UIManager.Instance.UpdateBulletUI(currentBullet);
         AudioSource.PlayClipAtPoint(reloadSE, transform.position);
     }
+    private Color currentColor;
     private void StartTimeSlow()
     {
         if (inTimeSlow)
         {
             return;
         }
+        currentColor = PostEffectsManager.Instance.colorTint_Color;
+        StartCoroutine(PostEffectsManager.Instance.GradientTintColor(new Color(0.8f, 0.8f, 1.0f), 0.2f));
+        StartCoroutine(PostEffectsManager.Instance.DesaturateScreen(0.2f, 0.1f));
         inTimeSlow = true;
         Time.timeScale -= timeSlowMult;
     }
@@ -172,6 +183,8 @@ public class Player : MonoBehaviour
         {
             return;
         }
+        StartCoroutine(PostEffectsManager.Instance.GradientTintColor(currentColor, 0.1f));
+        StartCoroutine(PostEffectsManager.Instance.DesaturateScreen(0f, 0.1f));
         inTimeSlow = false;
         Time.timeScale += timeSlowMult;
     }
