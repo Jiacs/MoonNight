@@ -7,7 +7,11 @@ public enum Buff
     BulletCapIncrease,
     HPCountIncrease,
     DamageIncrease,
-    RecoverAllHP
+    RecoverAllHP,
+    AutoShot,
+    AutoReload,
+    TimeSlowTime,
+    TimeSlowMult
 }
 
 public class BuffSelector

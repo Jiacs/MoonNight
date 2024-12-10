@@ -35,6 +35,18 @@ public class OptionBlock : MonoBehaviour
             case Buff.RecoverAllHP:
                 text = "Recover All HP";
                 break;
+            case Buff.AutoReload:
+                text = "Auto Reload";
+                break;
+            case Buff.AutoShot:
+                text = "Auto Shot";
+                break;
+            case Buff.TimeSlowMult:
+                text = "Increase Time Slow Mult";
+                break;
+            case Buff.TimeSlowTime:
+                text = "Time Slow time +0.1s";
+                break;
         }
         transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = text;
     }
