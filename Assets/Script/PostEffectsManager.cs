@@ -147,7 +147,7 @@ public class PostEffectsManager : MonoBehaviour
         imageBlendScript.imagePos = imagePos;
         imageBlendScript.imageScale = imageScale;
     }
-    public void SetUpScreenShake(bool enable, float shakeFrequency, float shakeAmount)
+    public void SetUpScreenShake(bool enable, float shakeFrequency, float shakeAmount, bool forUIManager = false)
     {
         if (!screenShake_Enable)
         {
@@ -155,7 +155,7 @@ public class PostEffectsManager : MonoBehaviour
             return;
         }
         screenShakeScript.enabled = enable;
-        if(shakeAmount < screenShakeScript.shakeAmount)
+        if(shakeAmount < screenShakeScript.shakeAmount && !forUIManager)
         {
             return;
         }

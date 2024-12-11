@@ -61,11 +61,11 @@ public class GameManager : MonoBehaviour
     }
     private IEnumerator GameLoop()
     {
-        int waveCount = 0;
+        int waveCount = 1;
         yield return new WaitForSeconds(2f);
         while(!Player.isDead)
         {
-            if (waveCount % 10 != 0)
+            if (waveCount % 5 != 0)
             {
                 yield return SpawnZombies(zombieCountPerWave + UnityEngine.Random.Range(0, waveCount), waveCount);
                 yield return Wave();
