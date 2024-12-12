@@ -45,6 +45,11 @@ public class PostEffectsManager : MonoBehaviour
     [SerializeField] private bool desaturate_Enable;
     private Desaturate desaturateScript;
     public float desaturateAmount = 0;
+    [Header("ScreenBroken - Initialize")]
+    [SerializeField] private bool screenBorken_Enable;
+    private ScreenBroken screenBrokenScript;
+    public float screenBrokenNormalScale;
+    public Texture2D screenBrokenNormalTexture;
 
 
     #region Singleton
@@ -89,6 +94,10 @@ public class PostEffectsManager : MonoBehaviour
         {
             desaturateScript = Camera.main.AddComponent<Desaturate>();
         }
+        if(screenBorken_Enable)
+        {
+            screenBrokenScript = Camera.main.AddComponent<ScreenBroken>();
+        }
         InitializePostEffects();
     }
     public void InitializePostEffects()
@@ -98,6 +107,8 @@ public class PostEffectsManager : MonoBehaviour
         SetUpColorTint(colorTint_Enable, colorTint_Color);
         SetUpImageBlend(imageBlend_Enable, imageBlend_Texture, imageBlend_Alpha, imageBlend_ImagePos, imageBlend_ImageScale);
         SetUpDesaturate(desaturate_Enable, desaturateAmount);
+        SetUpScreenShake(screenShake_Enable, shakeAmount, shakeFrequency, true);
+        SetUpScreenBroken(screenBorken_Enable, screenBrokenNormalScale, screenBrokenNormalTexture);
     }
     public void SetUpBloom(bool enable, float intensity, float threshold)
     {
@@ -172,6 +183,17 @@ public class PostEffectsManager : MonoBehaviour
         desaturateScript.enabled = enable;
         desaturateScript.desaturateAmount = desaturateAmount;
     }
+    public void SetUpScreenBroken(bool enable, float normalScale, Texture2D normalTexture)
+    {
+        if (!screenBorken_Enable)
+        {
+            Debug.Log("ScreenBroken is not enabled");
+            return;
+        }
+        screenBrokenScript.enabled = enable;
+        screenBrokenScript.NormalScale = normalScale;
+        screenBrokenScript.brokenNormalMap = normalTexture;
+    }
     public void RemoveRadialBlur(float speed = 1)
     {
         //remove blur effect dynamically
@@ -237,5 +259,14 @@ public class PostEffectsManager : MonoBehaviour
             yield return null;
         }
         bloomScript.Threshold = threshold;
+    }
+    public void AnimateScreenBroken(float amount)
+    {
+        screenBrokenScript.NormalScale += amount;
+    }
+    public float ScreenBrokenNormalScale => screenBrokenScript.NormalScale;
+    public void SetScreenBrokenNormalScale(float amount)
+    {
+        screenBrokenScript.NormalScale = amount;
     }
 }

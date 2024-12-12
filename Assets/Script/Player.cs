@@ -30,7 +30,9 @@ public class Player : MonoBehaviour
     private float timeSlowTimer;
     private float timeSlowMult = 0.2f;
     private bool inTimeSlow = false;
+    private float screenBrokenAnimateSpeed = 1;
     private Coroutine autoReloadCoroutine;
+    [SerializeField] private RectTransform timeslowEnergyFill;
     private void Awake()
     {
         Position = transform.position;
@@ -52,6 +54,19 @@ public class Player : MonoBehaviour
         if(timeSlowTimer >= timeSlowTime)
         {
             timeSlowTimer = timeSlowTime;
+        }
+        timeslowEnergyFill.localScale = new Vector3(timeSlowTimer/timeSlowTime, 1, 1);
+        if(inTimeSlow)
+        {
+            PostEffectsManager.Instance.AnimateScreenBroken(screenBrokenAnimateSpeed * Time.deltaTime);
+            if (PostEffectsManager.Instance.ScreenBrokenNormalScale >= 1)
+            {
+                screenBrokenAnimateSpeed = -1;
+            }
+            else if(PostEffectsManager.Instance.ScreenBrokenNormalScale <= -1)
+            {
+                screenBrokenAnimateSpeed = 1;
+            }
         }
         if (Input.GetMouseButtonDown(0))
         {
@@ -187,6 +202,7 @@ public class Player : MonoBehaviour
         StartCoroutine(PostEffectsManager.Instance.DesaturateScreen(0f, 0.1f));
         inTimeSlow = false;
         Time.timeScale += timeSlowMult;
+        PostEffectsManager.Instance.SetScreenBrokenNormalScale(0);
     }
     Coroutine BlendBloodCoroutine;
     public void GetHit()

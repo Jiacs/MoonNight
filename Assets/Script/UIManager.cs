@@ -100,8 +100,12 @@ public class UIManager : MonoBehaviour
     [Header("Desaturate UI")]
     [SerializeField] private Toggle desaturate_Toggle;
     [SerializeField] private Slider desaturate_AmountSlider;
+    [Header("Screen Broken UI")]
+    [SerializeField] private Toggle screenBroken_Toggle;
+    [SerializeField] private Slider screenBroken_NormalScaleSlider;
 
     private Texture2D imageBlend_Texture;
+    private Texture2D screenBroken_NormalTexture;
 
     private void Start()
     {
@@ -135,6 +139,9 @@ public class UIManager : MonoBehaviour
 
         desaturate_Toggle.onValueChanged.AddListener(delegate { UpdateDesaturate(); });
         desaturate_AmountSlider.onValueChanged.AddListener(delegate { UpdateDesaturate(); });
+
+        screenBroken_Toggle.onValueChanged.AddListener(delegate { UpdateScreenBroken(); });
+        screenBroken_NormalScaleSlider.onValueChanged.AddListener(delegate { UpdateScreenBroken(); });
     }
     private void initializeUIValues()
     {
@@ -156,6 +163,8 @@ public class UIManager : MonoBehaviour
         screenShake_FrequencySlider.value = PostEffectsManager.Instance.shakeFrequency;
         screenShake_AmountSlider.value = PostEffectsManager.Instance.shakeAmount;
         desaturate_AmountSlider.value = PostEffectsManager.Instance.desaturateAmount;
+        screenBroken_NormalTexture = PostEffectsManager.Instance.screenBrokenNormalTexture;
+        screenBroken_NormalScaleSlider.value = PostEffectsManager.Instance.screenBrokenNormalScale;
     }
     public void UpdateBloom()
     {
@@ -202,6 +211,10 @@ public class UIManager : MonoBehaviour
     public void UpdateDesaturate()
     {
         PostEffectsManager.Instance.SetUpDesaturate(desaturate_Toggle.isOn, desaturate_AmountSlider.value);
+    }
+    public void UpdateScreenBroken()
+    {
+        PostEffectsManager.Instance.SetUpScreenBroken(screenBroken_Toggle.isOn, screenBroken_NormalScaleSlider.value, screenBroken_NormalTexture);
     }
     #endregion
 }
